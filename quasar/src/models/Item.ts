@@ -4,6 +4,6 @@ export interface Item {
     description: string,
     dueDate: Date,
     createdDate: Date,
-    isDone: boolean,
+    isDone: number,
 
 }

@@ -23,9 +23,9 @@ const app = new Elysia()
       return newIitem
     }, {
       body: t.Object({
-          title: t.String(),
-          description: t.String(),
-          dueDate: t.String()
+        title: t.String(),
+        description: t.String(),
+        dueDate: t.String()
       }),
     })
     .post('/items/done', async ({ body, set })  => {
@@ -33,19 +33,17 @@ const app = new Elysia()
       if (updateItem.length > 0) {
         return updateItem
       }
-      set.status = 400
+      set.status = 404
       return 'Not found'
     }, {
       body: t.Object({
-          id: t.Numeric(),
-          isDone: t.Boolean()
+        id: t.Numeric(),
+        isDone: t.Boolean()
       }),
     })
     .ws('/ws', {
       open(ws) {
-        console.log('open')
         ws.subscribe('test')
-        ws.publish('test', `${Date.now().toLocaleString()}: Hello`);
       },
       close(ws) {
         ws.unsubscribe('test')

@@ -11,7 +11,7 @@
 
 const { configure } = require('quasar/wrappers');
 const path = require('path');
-
+require('dotenv').config();
 module.exports = configure(function (/* ctx */) {
   return {
     eslint: {
@@ -50,6 +50,7 @@ module.exports = configure(function (/* ctx */) {
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
       'roboto-font', // optional, you are not bound to it
+      'material-icons-outlined',
       'material-icons', // optional, you are not bound to it
     ],
 
@@ -69,7 +70,9 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        API_SERVER: process.env.API_SERVER,
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
