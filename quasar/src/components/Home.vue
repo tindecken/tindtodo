@@ -168,14 +168,17 @@ socket.addEventListener('message', (event) => {
 
 // socket opened
 socket.addEventListener('open', (event) => {
+  console.log('open', event);
 });
 
 // socket closed
 socket.addEventListener('close', (event) => {
+  console.log('close', event);
 });
 
 // error handler
 socket.addEventListener('error', (event) => {
+  console.log('error', event);
 });
 async function onCreateItem() {
   const createItemRequest: CreateItemRequest = {
