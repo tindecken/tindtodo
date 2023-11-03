@@ -4,7 +4,7 @@
   "description": "Todo App",
   "productName": "Todo App",
   "author": "Tindecken <tindecken@gmail.com>",
-  "private": true,
+  "private": false,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
