@@ -3,10 +3,8 @@ import { swagger } from '@elysiajs/swagger'
 import { drizzle } from 'drizzle-orm/bun-sqlite';
 import { Database } from 'bun:sqlite';
 import { item } from "./db/schema/items"; 
-import type { NewItem } from "./db/schema/items";
 import { cors } from '@elysiajs/cors'
 import { desc, eq } from "drizzle-orm";
-
 
 console.log(Bun.env.DATABASE_URL);
 const sqlite = new Database(Bun.env.DATABASE_URL);
@@ -19,7 +17,7 @@ const app = new Elysia()
       return items
     })
     .post('/items', async ({ body })  => {
-      const newIitem = await db.insert(item).values({ title: body.title, description: body.description, dueDate: body.dueDate}) .returning()
+      const newIitem = await db.insert(item).values({ title: body.title, description: body.description, dueDate: body.dueDate}).returning()
       return newIitem
     }, {
       body: t.Object({
@@ -43,13 +41,11 @@ const app = new Elysia()
     })
     .ws('/ws', {
       open(ws) {
-        ws.subscribe('test')
       },
       close(ws) {
-        ws.unsubscribe('test')
       },
       async message(ws, msg) {
-        ws.publish('test', msg);
+        ws.publish(msg);
       }
     })
     .listen(3000);

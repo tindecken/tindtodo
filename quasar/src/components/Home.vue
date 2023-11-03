@@ -3,16 +3,16 @@
     <q-header height-hint="98"> </q-header>
     <q-page-container>
       <q-page padding class="column items-center">
-        <q-form class="column" @submit="onCreateItem" style="width: 500px">
+        <q-form class="column" @submit="onCreateItem" :style="layoutWidth">
           <div class="row">
             <q-input
+              ref="refTitle"
               class="col-12"
               autocomplete="off"
               outlined
               dense
               v-model="title"
               label="Title"
-              lazy-rules
               :rules="[
                 (val) => (val && val.length > 0) || 'Title is required.',
                 (val) =>
@@ -32,7 +32,6 @@
               dense
               v-model="description"
               label="Description"
-              lazy-rules
               :rules="[
                 (val) =>
                   val.length <= 2000 ||
@@ -70,27 +69,27 @@
                 </q-icon>
               </template>
             </q-input>
-            <q-btn class="col" outline label="Create" type="submit" style="height: 40px" />
+            <q-btn class="col" outline label="Create" color="accent" type="submit" style="height: 40px" />
           </div>
         </q-form>
         <q-separator
           color="accent"
           class="row q-mt-md q-mb-md"
-          style="width: 500px"
+          :style="layoutWidth"
         />
         <div v-for="item in items" :key="item.id" class="caption row">
-          <q-card class="my-card q-mb-sm" flat bordered style="width: 500px">
+          <q-card class="my-card q-mb-sm" flat bordered  :style="layoutWidth">
             <q-card-section class="q-pa-none">
               <q-card-section class="q-pa-sm row justify-between">
-                <div class="title col-10 col-lg-10 col-xl-11" style="overflow-wrap: anywhere;">
-                  <q-checkbox :true-value="1" :false-value="0" :model-value="item.isDone" @update:model-value="done(item)"/>
+                <div class="title col-10 col-lg-10 col-xl-10" style="overflow-wrap: anywhere;">
+                  <q-checkbox color="accent" :true-value="1" :false-value="0" :model-value="item.isDone" @update:model-value="done(item)"/>
                   <span :class="item.isDone == 1 ? 'text-strike' : ''">{{ item.title }}</span>
                 </div>
-                <div class="actions col-2 col-lg-2 col-xl-1 row justify-end items-center">
-                  <q-icon size="sm" color="info" name="o_info">
-                    <q-tooltip class="bg-accent">
+                <div class="actions col-2 col-lg-2 col-xl-2 row justify-end items-center">
+                  <q-icon size="sm" color="accent" name="o_info" @click="showDetail(item)">
+                    <q-tooltip class="bg-accent"  style="font-size: small">
                       <div>
-                        Created On: {{ item.createdDate }}
+                        Created On: {{ item.createdDate.toLocaleString() }}
                       </div>
                       <div>
                         Due Date: {{ item.dueDate ? item.dueDate : "none"}}
@@ -98,11 +97,11 @@
                       <div>
                         Description:
                       </div>
-                      <div  style="white-space: pre-wrap;">{{item.description}}</div>
+                      <div style="white-space: pre-wrap;">{{item.description}}</div>
                     </q-tooltip>
                   </q-icon>
-                  <q-icon v-if="item.isDone !== 1 && isDueDate(item.dueDate)" class="q-ml-xs" size="sm" color="accent" name="o_query_builder">
-                    <q-tooltip class="bg-accent">
+                  <q-icon v-if="item.isDone !== 1 && isDueDate(item.dueDate)" class="q-ml-xs" size="sm" color="red" name="o_query_builder">
+                    <q-tooltip class="bg-accent"  style="font-size: small">
                       Over due: {{ overDueDate(item.dueDate) }} day(s)
                     </q-tooltip>
                   </q-icon>
@@ -125,16 +124,27 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref, Ref } from 'vue';
+import { onBeforeMount, ref, Ref, computed } from 'vue';
 import { CreateItemRequest } from '../models/CreateItemRequest';
 import { UpdateStatusRequest } from '../models/UpdateStatusRequest';
-import { date } from 'quasar';
+import { date, QInput, useQuasar } from 'quasar';
 import { Item } from '../models/Item';
+import DetailDialog from './DetailDialog.vue'
 
+const $q = useQuasar();
 const title = ref('');
 const description = ref('');
 const dueDate = ref('');
 const items: Ref<Item[]> = ref([]);
+const refTitle = ref<QInput | null>(null);
+const layoutWidth = computed(() => {
+  switch ($q.screen.name) {
+    case 'xs':
+      return 'width: 360px;';
+    default:
+      return 'width: 500px;'
+  }
+})
 onBeforeMount(async () => {
   items.value = await fetch(`http://${process.env.API_SERVER}/items`).then((res) =>
     res.json()
@@ -176,6 +186,12 @@ async function onCreateItem() {
     description: description.value,
     dueDate: dueDate.value,
   };
+  refTitle.value?.focus()
+  title.value = ''
+  description.value = ''
+  dueDate.value = ''
+  setTimeout(() => refTitle.value?.resetValidation(), 100);
+
   const response = await fetch(`http://${process.env.API_SERVER}/items`, {
     method: 'POST',
     body: JSON.stringify(createItemRequest),
@@ -232,5 +248,22 @@ function overDueDate(dueDate: Date): number {
   const today = new Date()
   const dateDiff = date.getDateDiff(today, dueDate, 'days')
   return dateDiff
+}
+function showDetail(item: Item) {
+  $q.dialog({
+    component: DetailDialog,
+    componentProps: {
+      item: item,
+    },
+  })
+    .onOk(() => {
+      // TODO
+    })
+    .onCancel(async () => {
+      // TODO
+    })
+    .onDismiss(() => {
+      // TODO
+    });
 }
 </script>
