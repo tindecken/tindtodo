@@ -6,6 +6,7 @@
         <q-form class="column" @submit="onCreateItem" :style="layoutWidth">
           <div class="row">
             <q-input
+              color="accent"
               ref="refTitle"
               class="col-12"
               autocomplete="off"
@@ -24,6 +25,7 @@
           </div>
           <div class="row">
             <q-input
+              color="accent"
               class="col-12"
               rows="2"
               type="textarea"
@@ -42,6 +44,7 @@
           </div>
           <div class="row justify-between">
             <q-input
+              color="accent"  
               class="col-9 q-mr-sm"
               dense
               outlined
@@ -113,12 +116,8 @@
       </q-page>
     </q-page-container>
 
-    <q-footer>
-      <q-toolbar>
-        <q-toolbar-title
-          >{{ $q.screen.name }}, width: {{ $q.screen.width }}
-        </q-toolbar-title>
-      </q-toolbar>
+    <q-footer class="row justify-center" style="height: 40px;">
+      <span  class="self-center text-subtitle1">Built on top of <a href="#" @click="showTechStack()">Bun and Vue</a></span>
     </q-footer>
   </q-layout>
 </template>
@@ -130,6 +129,7 @@ import { UpdateStatusRequest } from '../models/UpdateStatusRequest';
 import { date, QInput, useQuasar } from 'quasar';
 import { Item } from '../models/Item';
 import DetailDialog from './DetailDialog.vue'
+import TechStackDialog from './TechStackDialog.vue'
 
 const $q = useQuasar();
 const title = ref('');
@@ -153,16 +153,30 @@ onBeforeMount(async () => {
 var socket = new WebSocket(`ws://${process.env.API_SERVER}/ws`);
 // message is received
 socket.addEventListener('message', (event) => {
-  console.log('event', event);
   const receivedData = JSON.parse(event.data)
   if (receivedData.type === 'update') {
     const index = items.value.findIndex((item) => item.id === receivedData.id);
     if (index !== -1) {
       items.value[index].isDone = receivedData.isDone;
+      if (receivedData.isDone === 1) {
+        $q.notify({
+          type: 'positive',
+          message: `Someone has done an item: ${items.value[index].title}.`,
+        })
+      } else if (receivedData.isDone === 0){
+        $q.notify({
+          type: 'positive',
+          message: `Someone has undone an item: ${items.value[index].title}.`,
+        })
+      }
     }
   } else if (receivedData.type === 'create') {
     const itemTemp = JSON.parse(event.data) as Item;
-    items.value.unshift(itemTemp);  
+    items.value.unshift(itemTemp); 
+    $q.notify({
+      type: 'positive',
+      message: `Someone has created an item: ${itemTemp.title}.`,
+    });
   }
 });
 
@@ -209,10 +223,9 @@ async function onCreateItem() {
   socket.send(JSON.stringify(createItem));
 }
 async function done(item: Item) {
-  console.log('item', item);
   const updateStatusRequest: UpdateStatusRequest = {
     id: item.id,
-    isDone: item.isDone === 1 ? false : true,
+    isDone: item.isDone === 0 ? 1 : 0
   }
   const response: Response = await fetch(`http://${process.env.API_SERVER}/items/done`, {
     method: 'POST',
@@ -223,7 +236,7 @@ async function done(item: Item) {
   });
   if (response.ok) {
     const index = items.value.findIndex(x => x.id === item.id);
-    items.value[index].isDone = updateStatusRequest.isDone === true ? 1 : 0;
+    items.value[index].isDone = updateStatusRequest.isDone
     const data = await response.json();
     const updateItem = {
       type: 'update',
@@ -238,7 +251,6 @@ function isDueDate(dueDate: Date): boolean {
   }
   const today = new Date()
   const dateDiff = date.getDateDiff(dueDate, today, 'days')
-  console.log('dateDiff', dateDiff)
   if (dateDiff < 0) {
     return true
   }
@@ -266,4 +278,41 @@ function showDetail(item: Item) {
       // TODO
     });
 }
+function showTechStack() {
+  $q.dialog({
+    component: TechStackDialog,
+  })
+    .onOk(() => {
+      // TODO
+    })
+    .onCancel(async () => {
+      // TODO
+    })
+    .onDismiss(() => {
+      // TODO
+    });
+}
 </script>
+<style scoped>
+a:link {
+  color: white;
+  background-color: transparent;
+}
+
+a:visited {
+  color: white;
+  background-color: transparent;
+}
+
+a:hover {
+  color: plum;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:active {
+  color: white;
+  background-color: transparent;
+  text-decoration: underline;
+}
+</style>

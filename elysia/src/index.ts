@@ -6,7 +6,6 @@ import { item } from "./db/schema/items";
 import { cors } from '@elysiajs/cors'
 import { desc, eq } from "drizzle-orm";
 
-console.log(Bun.env.DATABASE_URL);
 const sqlite = new Database(Bun.env.DATABASE_URL);
 const db = drizzle(sqlite);
 const app = new Elysia()
@@ -36,19 +35,20 @@ const app = new Elysia()
     }, {
       body: t.Object({
         id: t.Numeric(),
-        isDone: t.Boolean()
+        isDone: t.Number()
       }),
     })
     .ws('/ws', {
       open(ws) {
+        ws.subscribe('public');
       },
       close(ws) {
       },
       async message(ws, msg) {
-        ws.publish(msg);
+        ws.publish('public',msg);
       }
     })
-    .listen(3000);
+    .listen(Bun.env.PORT);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`

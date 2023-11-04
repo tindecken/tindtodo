@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="row q-pa-md">
-        <div style="white-space: pre-wrap;">{{item.description}}</div>
+        <div style="white-space: pre-wrap;">{{item?.description}}</div>
       </div>
     </q-layout>
   </q-dialog>
@@ -35,5 +35,5 @@ const props = defineProps({
 });
 
 defineEmits([...useDialogPluginComponent.emits]);
-const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent();
+const { dialogRef, onDialogHide } = useDialogPluginComponent();
 </script>
