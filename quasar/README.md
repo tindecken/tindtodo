@@ -1,4 +1,4 @@
-# Tind CV (tindcv)
+# Tind Todo (tindcv)
 
 TindCV
 

@@ -116,7 +116,7 @@
       </q-page>
     </q-page-container>
 
-    <q-footer class="row justify-center" style="height: 40px;">
+    <q-footer class="row justify-center bg-accent" style="height: 40px;">
       <span  class="self-center text-subtitle1">Built on top of <a href="#" @click="showTechStack()">Bun and Vue</a></span>
     </q-footer>
   </q-layout>
