@@ -15,8 +15,11 @@
           </q-bar>
         </div>
       </div>
-      <div class="row q-pa-md">
-        <div style="white-space: pre-wrap;">{{item?.description}}</div>
+      <div class="q-pa-md">
+        <div><span class="text-subtitle1 text-weight-medium">Title: </span><span>{{item?.title}}</span></div>
+        <div><span class="text-subtitle1  text-weight-medium">Created on: </span><span>{{item?.createdDate}}</span></div>
+        <div><span class="text-subtitle1  text-weight-medium">Due Date: </span><span>{{item?.dueDate ? item?.dueDate : 'None'}}</span></div>
+        <div style="white-space: pre-wrap;"><span class="text-subtitle1  text-weight-medium">Description: </span><div>{{item?.description}}</div></div>
       </div>
     </q-layout>
   </q-dialog>

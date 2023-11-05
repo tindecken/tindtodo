@@ -150,7 +150,7 @@ onBeforeMount(async () => {
     res.json()
   );
 });
-var socket = new WebSocket(`ws://${process.env.API_SERVER}/ws`);
+var socket = new WebSocket(`wss://${process.env.API_SERVER}/ws`);
 // message is received
 socket.addEventListener('message', (event) => {
   const receivedData = JSON.parse(event.data)
