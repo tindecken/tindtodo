@@ -206,7 +206,7 @@ async function onCreateItem() {
   dueDate.value = ''
   setTimeout(() => refTitle.value?.resetValidation(), 100);
 
-  const response = await fetch(`http://${process.env.API_SERVER}/items`, {
+  const response = await fetch(`https://${process.env.API_SERVER}/items`, {
     method: 'POST',
     body: JSON.stringify(createItemRequest),
     headers: {
