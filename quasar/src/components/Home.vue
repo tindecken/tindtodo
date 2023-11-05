@@ -146,11 +146,11 @@ const layoutWidth = computed(() => {
   }
 })
 onBeforeMount(async () => {
-  items.value = await fetch(`http://${process.env.API_SERVER}/items`).then((res) =>
+  items.value = await fetch(`${process.env.API_SERVER}/items`).then((res) =>
     res.json()
   );
 });
-var socket = new WebSocket(`wss://${process.env.API_SERVER}/ws`);
+var socket = new WebSocket(`${process.env.WEBSOCKET_SERVER}/ws`);
 // message is received
 socket.addEventListener('message', (event) => {
   const receivedData = JSON.parse(event.data)
@@ -206,7 +206,7 @@ async function onCreateItem() {
   dueDate.value = ''
   setTimeout(() => refTitle.value?.resetValidation(), 100);
 
-  const response = await fetch(`https://${process.env.API_SERVER}/items`, {
+  const response = await fetch(`${process.env.API_SERVER}/items`, {
     method: 'POST',
     body: JSON.stringify(createItemRequest),
     headers: {
@@ -227,7 +227,7 @@ async function done(item: Item) {
     id: item.id,
     isDone: item.isDone === 0 ? 1 : 0
   }
-  const response: Response = await fetch(`http://${process.env.API_SERVER}/items/done`, {
+  const response: Response = await fetch(`${process.env.API_SERVER}/items/done`, {
     method: 'POST',
     body: JSON.stringify(updateStatusRequest),
     headers: {

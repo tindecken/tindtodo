@@ -72,6 +72,7 @@ module.exports = configure(function (/* ctx */) {
       // analyze: true,
       env: {
         API_SERVER: process.env.API_SERVER,
+        WEBSOCKET_SERVER: process.env.WEBSOCKET_SERVER
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
