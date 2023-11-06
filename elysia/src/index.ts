@@ -11,6 +11,7 @@ const db = drizzle(sqlite);
 const app = new Elysia()
     .use(swagger())
     .use(cors())
+    .get("/", () => "Hello Elysia")
     .get("/items",  async() => {
       const items =  await db.select().from(item).orderBy(desc(item.createdDate));
       return items
@@ -48,7 +49,13 @@ const app = new Elysia()
         ws.publish('public',msg);
       }
     })
-    .listen(Bun.env.PORT);
+    .listen({
+      port: (Bun.env.PORT) as string,
+      tls: {
+        cert: Bun.file('/etc/letsencrypt/live/todo.aorppost.com/fullchain.pem'),
+        key: Bun.file('/etc/letsencrypt/live/todo.aorppost.com/privkey.pem')
+      }
+    })
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
