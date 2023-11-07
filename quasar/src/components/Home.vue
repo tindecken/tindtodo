@@ -92,7 +92,7 @@
                   <q-icon size="sm" color="accent" name="o_info" @click="showDetail(item)">
                     <q-tooltip class="bg-accent"  style="font-size: small">
                       <div>
-                        Created On: {{ item.createdDate.toLocaleString() }}
+                        Created On: {{ convertUTCDateToLocalDate(item.createdDate) }}
                       </div>
                       <div>
                         Due Date: {{ item.dueDate ? item.dueDate : "none"}}
@@ -130,6 +130,7 @@ import { date, QInput, useQuasar } from 'quasar';
 import { Item } from '../models/Item';
 import DetailDialog from './DetailDialog.vue'
 import TechStackDialog from './TechStackDialog.vue'
+import { convertUTCDateToLocalDate } from '../utils/utils';
 
 const $q = useQuasar();
 const title = ref('');
@@ -316,3 +317,4 @@ a:active {
   text-decoration: underline;
 }
 </style>
+../utils../utils/utils.ts

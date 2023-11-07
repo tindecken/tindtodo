@@ -2,7 +2,7 @@
   "name": "tindecken-todo",
   "version": "0.0.1",
   "description": "Todo App",
-  "productName": "Todo App",
+  "productName": "A simple todo app",
   "author": "Tindecken <tindecken@gmail.com>",
   "private": false,
   "scripts": {
