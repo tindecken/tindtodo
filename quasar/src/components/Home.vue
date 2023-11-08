@@ -58,7 +58,7 @@
                     transition-show="scale"
                     transition-hide="scale"
                   >
-                    <q-date v-model="dueDate" mask="YYYY-MM-DD">
+                    <q-date v-model="dueDate" mask="YYYY-MM-DD" today-btn>
                       <div class="row items-center justify-end">
                         <q-btn
                           v-close-popup
@@ -80,7 +80,10 @@
           class="row q-mt-md q-mb-md"
           :style="layoutWidth"
         />
-        <div v-for="item in items" :key="item.id" class="caption row">
+        <div :style="layoutWidth" class="row justify-end">
+          <q-checkbox color="accent" :model-value="isShowDone" @update:model-value="toogleShowDone()" label="Show completed"/>
+        </div>
+        <div v-for="item in filteredItems" :key="item.id" class="caption row">
           <q-card class="my-card q-mb-sm" flat bordered  :style="layoutWidth">
             <q-card-section class="q-pa-none">
               <q-card-section class="q-pa-sm row justify-between">
@@ -134,9 +137,16 @@ import { convertUTCDateToLocalDate } from '../utils/utils';
 
 const $q = useQuasar();
 const title = ref('');
+const isShowDone = ref(true)
 const description = ref('');
 const dueDate = ref('');
 const items: Ref<Item[]> = ref([]);
+const filteredItems: Ref<Item[]> = computed(() => {
+  if (isShowDone.value === false) {
+    return items.value.filter(i => i.isDone == 0)
+  }
+  return items.value
+})
 const refTitle = ref<QInput | null>(null);
 const layoutWidth = computed(() => {
   switch ($q.screen.name) {
@@ -292,6 +302,9 @@ function showTechStack() {
     .onDismiss(() => {
       // TODO
     });
+}
+async function toogleShowDone() {
+  isShowDone.value = !isShowDone.value
 }
 </script>
 <style scoped>
