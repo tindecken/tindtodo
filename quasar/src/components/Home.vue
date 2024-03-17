@@ -44,7 +44,7 @@
           </div>
           <div class="row justify-between">
             <q-input
-              color="accent"  
+              color="accent"
               class="col-9 q-mr-sm"
               dense
               outlined
@@ -157,9 +157,16 @@ const layoutWidth = computed(() => {
   }
 })
 onBeforeMount(async () => {
-  items.value = await fetch(`${process.env.API_SERVER}/items`).then((res) =>
-    res.json()
-  );
+  items.value = await fetch(`${process.env.API_SERVER}/items`)
+    .then((res) =>
+      res.json()
+    )
+    .catch((error) => {
+      $q.notify({
+          type: 'negative',
+          message: `${error}.`,
+        })
+    });
 });
 var socket = new WebSocket(`${process.env.WEBSOCKET_SERVER}/ws`);
 // message is received
@@ -183,7 +190,7 @@ socket.addEventListener('message', (event) => {
     }
   } else if (receivedData.type === 'create') {
     const itemTemp = JSON.parse(event.data) as Item;
-    items.value.unshift(itemTemp); 
+    items.value.unshift(itemTemp);
     $q.notify({
       type: 'positive',
       message: `Someone has created an item: ${itemTemp.title}.`,
@@ -226,7 +233,7 @@ async function onCreateItem() {
   });
   const data = await response.json();
   items.value.unshift(data[0]);
-  
+
   const createItem = {
     type: 'create',
     ...data[0]
