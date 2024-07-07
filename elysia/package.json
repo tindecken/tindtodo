@@ -10,7 +10,8 @@
     "@elysiajs/swagger": "^0.7.4",
     "better-sqlite3": "^9.0.0",
     "drizzle-orm": "^0.28.6",
-    "elysia": "latest"
+    "elysia": "latest",
+    "node-gyp": "^10.1.0"
   },
   "devDependencies": {
     "bun-types": "latest",
