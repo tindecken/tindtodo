@@ -11,7 +11,7 @@ const db = drizzle(sqlite);
 const app = new Elysia()
     .use(swagger())
     .use(cors({
-      origin: ['tindecken.xyz', 'localhost']
+      origin: ['todo.tindecken.xyz', 'localhost']
     }))
     .get("/", () => "Hello Elysia")
     .get("/items",  async() => {
