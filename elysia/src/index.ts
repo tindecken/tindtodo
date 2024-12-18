@@ -10,7 +10,9 @@ const sqlite = new Database(Bun.env.DATABASE_URL);
 const db = drizzle(sqlite);
 const app = new Elysia()
     .use(swagger())
-    .use(cors())
+    .use(cors({
+      origin: ['tindecken.xyz', 'localhost']
+    }))
     .get("/", () => "Hello Elysia")
     .get("/items",  async() => {
       const items =  await db.select().from(item).orderBy(desc(item.createdDate));
