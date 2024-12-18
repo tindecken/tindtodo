@@ -11,7 +11,7 @@ const db = drizzle(sqlite);
 const app = new Elysia()
     .use(swagger())
     .use(cors({
-      origin: ['todo.tindecken.xyz', 'localhost']
+      origin: [/.*\.tindecken\.xyz$/, 'tindecken.xyz', 'todo.tindecken.xyz', 'localhost']
     }))
     .get("/", () => "Hello Elysia")
     .get("/items",  async() => {
@@ -54,8 +54,8 @@ const app = new Elysia()
     .listen({
       port: (Bun.env.PORT) as string,
       tls: {
-        cert: Bun.file('/etc/letsencrypt/live/todo.tindecken.xyz/fullchain.pem'),
-        key: Bun.file('/etc/letsencrypt/live/todo.tindecken.xyz/privkey.pem')
+        cert: Bun.file('/etc/nginx/ssl/todo.tindecken.xyz_2048/fullchain.cer'),
+        key: Bun.file('/etc/nginx/ssl/todo.tindecken.xyz_2048/private.key')
       }
     })
 
