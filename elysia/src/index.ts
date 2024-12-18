@@ -52,8 +52,8 @@ const app = new Elysia()
     .listen({
       port: (Bun.env.PORT) as string,
       tls: {
-        cert: Bun.file('/etc/letsencrypt/live/todo.aorppost.com/fullchain.pem'),
-        key: Bun.file('/etc/letsencrypt/live/todo.aorppost.com/privkey.pem')
+        cert: Bun.file('/etc/letsencrypt/live/todo.tindecken.xyz/fullchain.pem'),
+        key: Bun.file('/etc/letsencrypt/live/todo.tindecken.xyz/privkey.pem')
       }
     })
 
