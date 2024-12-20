@@ -64,9 +64,12 @@ const app = new Elysia()
       }
     })
     .listen({
-      port: listenPort,
-      tls
-  })
+      port: (Bun.env.PORT) as string,
+      tls: {
+        cert: Bun.file('/etc/letsencrypt/live/todo.tindecken.xyz/fullchain.pem'),
+        key: Bun.file('/etc/letsencrypt/live/todo.tindecken.xyz/privkey.pem')
+      }
+    })
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
