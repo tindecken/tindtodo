@@ -9,8 +9,8 @@ import { desc, eq } from "drizzle-orm";
 const sqlite = new Database(Bun.env.DATABASE_URL);
 const listenPort = process.env['PORT']!
 const tls = (process.env.NODE_ENV === 'production') ? {
-    cert: Bun.file(process.env['CERT']!),
-    key: Bun.file(process.env['KEY']!)
+  cert: Bun.file(process.env['CERT']!),
+  key: Bun.file(process.env['KEY']!)
 }: {}
 const db = drizzle(sqlite);
 const app = new Elysia()
@@ -64,11 +64,8 @@ const app = new Elysia()
       }
     })
     .listen({
-      port: (Bun.env.PORT) as string,
-      tls: {
-        cert: Bun.file('/etc/letsencrypt/live/todo.tindecken.xyz/fullchain.pem'),
-        key: Bun.file('/etc/letsencrypt/live/todo.tindecken.xyz/privkey.pem')
-      }
+      port: listenPort,
+      tls
     })
 
 console.log(
