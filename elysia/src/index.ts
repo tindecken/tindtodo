@@ -7,10 +7,17 @@ import { cors } from '@elysiajs/cors'
 import { desc, eq } from "drizzle-orm";
 
 const sqlite = new Database(Bun.env.DATABASE_URL);
+const listenPort = process.env['PORT']!
+const tls = (process.env.NODE_ENV === 'production') ? {
+    cert: Bun.file(process.env['CERT']!),
+    key: Bun.file(process.env['KEY']!)
+}: {}
 const db = drizzle(sqlite);
 const app = new Elysia()
     .use(swagger())
-    .use(cors())
+    .use(cors({
+      origin: [/.*\.tindecken\.xyz$/, 'tindecken.xyz', 'todo.tindecken.xyz', 'localhost']
+    }))
     .get("/", () => "Hello Elysia")
     .get("/items",  async() => {
       const items =  await db.select().from(item).orderBy(desc(item.createdDate));
@@ -25,6 +32,13 @@ const app = new Elysia()
         description: t.String(),
         dueDate: t.String()
       }),
+    })
+    .delete('/items/:itemId', async ({ body, params: { itemId } })  => {
+      await db.delete(item).where(eq(item.id, parseInt(itemId)))
+    }, {
+      params: t.Object({
+        itemId: t.String()
+      })
     })
     .post('/items/done', async ({ body, set })  => {
       const updateItem = await db.update(item).set({ isDone: body.isDone}).where(eq(item.id, body.id)).returning()
@@ -50,12 +64,9 @@ const app = new Elysia()
       }
     })
     .listen({
-      port: (Bun.env.PORT) as string,
-      tls: {
-        cert: Bun.file('/etc/letsencrypt/live/todo.tindecken.xyz/fullchain.pem'),
-        key: Bun.file('/etc/letsencrypt/live/todo.tindecken.xyz/privkey.pem')
-      }
-    })
+      port: listenPort,
+      tls
+  })
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
