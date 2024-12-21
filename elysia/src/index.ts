@@ -67,7 +67,6 @@ const app = new Elysia()
       port: listenPort,
       tls
     })
-
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+    console.log(
+      `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}, environment mode: ${process.env.NODE_ENV}`
+    );
