@@ -8,10 +8,10 @@ import { desc, eq } from "drizzle-orm";
 
 const sqlite = new Database(Bun.env.DATABASE_URL);
 const listenPort = process.env['PORT']!
-const tls = (process.env.NODE_ENV === 'production') ? {
-  cert: Bun.file(process.env['CERT']!),
-  key: Bun.file(process.env['KEY']!)
-}: {}
+// const tls = (process.env.NODE_ENV === 'production') ? {
+//   cert: Bun.file(process.env['CERT']!),
+//   key: Bun.file(process.env['KEY']!)
+// }: {}
 const db = drizzle(sqlite);
 const app = new Elysia()
     .use(swagger())
@@ -65,7 +65,7 @@ const app = new Elysia()
     })
     .listen({
       port: listenPort,
-      tls
+      // tls
     })
     console.log(
       `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}, environment mode: ${process.env.NODE_ENV}, bun: ${Bun.env.NODE_ENV}`
